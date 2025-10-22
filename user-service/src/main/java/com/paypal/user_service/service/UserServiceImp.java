@@ -3,9 +3,12 @@ package com.paypal.user_service.service;
 import java.util.List;
 import java.util.Optional;
 
+import org.springframework.stereotype.Service;
+
 import com.paypal.user_service.entity.User;
 import com.paypal.user_service.repository.UserRepo;
 
+@Service
 public class UserServiceImp implements UserService {
 
     private UserRepo userRepo;
