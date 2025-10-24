@@ -33,5 +33,9 @@ public class UserServiceImp implements UserService {
     public List<User> getAllUsers() {
         return userRepo.findAll();
     }
+
+    public Optional<User> getUserByEmail(String email){
+        return userRepo.findByEmail(email);
+    }
     
 }
