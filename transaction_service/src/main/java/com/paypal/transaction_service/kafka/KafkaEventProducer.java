@@ -1,18 +1,40 @@
 package com.paypal.transaction_service.kafka;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.kafka.core.KafkaTemplate;
+
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.paypal.transaction_service.entity.Transaction;
+
 public class KafkaEventProducer {
+
 
     private final KafkaTemplate<String, Transaction> kafkaTemplate;
     private final ObjectMapper objectMapper;
 
     @Autowired
-    public KafkaEventProducer(KafkaEventProducer<String, Transaction> kafkaEventProducer, ObjectMapper objectMapper){
-        this.kafkaEventProducer = kafkaEventProducer;
+    public KafkaEventProducer(KafkaTemplate<String, Transaction> kafkaTemplate, ObjectMapper objectMapper){
+        this.kafkaTemplate = kafkaTemplate;
         this.objectMapper = objectMapper;
         this.objectMapper.registerModule(new JavaTimeModule());
     }
 
     public void sendTransactionEvent(String key, Transaction transaction){
+
+         System.out.println("📤 Sending to Kafka → Topic: " + TOPIC + ", Key: " + key + ", Message: " + transaction);
+
+         CompletableFuture<SendResult<String, Transaction>> future = kafkaTemplate.send(TOPIC, key, transaction);
+
+         future.thenAccept(result -> {
+            RecordMetadata metadata = result.getRecordMetadata();
+                        System.out.println("✅ Kafka message sent successfully! Topic: " + metadata.topic() + ", Partition: " + metadata.partition() + ", Offset: " + metadata.offset());
+
+         }).execptionally(ex -> {
+             System.err.println("❌ Failed to send Kafka message: " + ex.getMessage());
+            ex.printStackTrace();
+            return null;
+         })
         
     }
 }
