@@ -1,5 +1,7 @@
 package com.paypal.transaction_service.kafka;
 
+import java.util.concurrent.CompletableFuture;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.kafka.core.KafkaTemplate;
 
@@ -9,6 +11,7 @@ import com.paypal.transaction_service.entity.Transaction;
 
 public class KafkaEventProducer {
 
+    private static final String TOPIC = "transaction";
 
     private final KafkaTemplate<String, Transaction> kafkaTemplate;
     private final ObjectMapper objectMapper;
@@ -34,7 +37,7 @@ public class KafkaEventProducer {
              System.err.println("❌ Failed to send Kafka message: " + ex.getMessage());
             ex.printStackTrace();
             return null;
-         })
+         });
         
     }
 }
