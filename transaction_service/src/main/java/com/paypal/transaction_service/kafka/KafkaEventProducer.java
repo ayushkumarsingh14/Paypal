@@ -15,7 +15,7 @@ import com.paypal.transaction_service.entity.Transaction;
 @Service
 public class KafkaEventProducer {
 
-    private static final String TOPIC = "transaction";
+    private static final String TOPIC = "txn-initiated";
 
     private final KafkaTemplate<String, Transaction> kafkaTemplate;
     private final ObjectMapper objectMapper;

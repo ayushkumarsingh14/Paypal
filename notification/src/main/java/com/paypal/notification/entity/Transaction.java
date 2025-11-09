@@ -9,7 +9,6 @@ import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "transaction")
-@JsonIgnoreProperties(ignoreUnknown = true)
 public class Transaction {
 
     @Id
