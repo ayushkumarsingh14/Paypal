@@ -1,11 +1,16 @@
 package com.paypal.transaction_service.entity;
 
-import java.time.LocalDateTime;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
+
+import java.time.LocalDateTime;
 import jakarta.validation.constraints.Positive;
+
+
 
 @Entity
 @Table(name = "transaction")
+
 public class Transaction {
 
     @Id
@@ -18,36 +23,40 @@ public class Transaction {
     @Column(nullable = false)
     private Long receiverId;
 
+
     @Column(nullable = false)
     @Positive(message = "Amount must be positive")
     private Double amount;
 
     @Column(nullable = false)
-    private LocalDateTime timeStamp;
+    private LocalDateTime timestamp;
 
     @Column(nullable = false)
     private String status;
 
     public Transaction() {}
 
-    public Transaction(Long senderId, Long receiverId, Double amount, LocalDateTime timeStamp, String status) {
+    public Transaction(Long senderId, Long receiverId,
+                       String senderNameSnapshot, String receiverNameSnapshot,
+                       Double amount, LocalDateTime timestamp, String status) {
         this.senderId = senderId;
         this.receiverId = receiverId;
         this.amount = amount;
-        this.timeStamp = timeStamp;
+        this.timestamp = timestamp;
         this.status = status;
     }
 
     @PrePersist
     public void prePersist() {
-        if (timeStamp == null) {
-            timeStamp = LocalDateTime.now();
+        if (timestamp == null) {
+            timestamp = LocalDateTime.now();
         }
         if (status == null) {
             status = "PENDING";
         }
     }
 
+    // Getters and setters
     public Long getId() {
         return id;
     }
@@ -59,7 +68,6 @@ public class Transaction {
     public Long getSenderId() {
         return senderId;
     }
-
     public void setSenderId(Long senderId) {
         this.senderId = senderId;
     }
@@ -67,7 +75,6 @@ public class Transaction {
     public Long getReceiverId() {
         return receiverId;
     }
-
     public void setReceiverId(Long receiverId) {
         this.receiverId = receiverId;
     }
@@ -75,23 +82,20 @@ public class Transaction {
     public Double getAmount() {
         return amount;
     }
-
     public void setAmount(Double amount) {
         this.amount = amount;
     }
 
-    public LocalDateTime getTimeStamp() {
-        return timeStamp;
+    public LocalDateTime getTimestamp() {
+        return timestamp;
     }
-
-    public void setTimeStamp(LocalDateTime timeStamp) {
-        this.timeStamp = timeStamp;
+    public void setTimestamp(LocalDateTime timestamp) {
+        this.timestamp = timestamp;
     }
 
     public String getStatus() {
         return status;
     }
-
     public void setStatus(String status) {
         this.status = status;
     }
@@ -103,7 +107,7 @@ public class Transaction {
                 ", senderId=" + senderId +
                 ", receiverId=" + receiverId +
                 ", amount=" + amount +
-                ", timeStamp=" + timeStamp +
+                ", timestamp=" + timestamp +
                 ", status='" + status + '\'' +
                 '}';
     }
